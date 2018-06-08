@@ -1,6 +1,8 @@
 package com.user;
 
 import com.entity.User;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.mybatis.mapper.UserMapper;
 import lombok.extern.java.Log;
 import lombok.extern.log4j.Log4j;
@@ -42,7 +44,21 @@ public class UserTest {
         log.info("[添加结果] - [{}]", row2);
         final int row3 = userMapper.insert(user3);
         log.info("[添加结果] - [{}]", row3);
-        final List<User> u1 = userMapper.findByUsername();
-        log.info("[根据用户名查询] - [{}]", u1);
+
+        userMapper.insertSelective(new User("u1","p1"));
+        userMapper.insertSelective(new User("u1","p1"));
+        userMapper.insertSelective(new User("u1","p1"));
+        userMapper.insertSelective(new User("u1","p1"));
+        userMapper.insertSelective(new User("u1","p1"));
+        userMapper.insertSelective(new User("u1","p1"));
+        userMapper.insertSelective(new User("u1","p1"));
+
+        // TODO 分页 + 排序 this.userMapper.selectAll() 这一句就是我们需要写的查询，有了这两款插件无缝切换各种数据库
+        final PageInfo<Object> pageInfo = PageHelper.startPage(1, 10).setOrderBy("id desc").doSelectPageInfo(() -> this.userMapper.selectAll());
+        log.info("[lambda写法] - [分页信息] - [{}]", pageInfo.toString());
+
+        PageHelper.startPage(1, 10).setOrderBy("id desc");
+        final PageInfo<User> userPageInfo = new PageInfo<>(this.userMapper.selectAll());
+        log.info("[普通写法] - [{}]", userPageInfo);
     }
 }
