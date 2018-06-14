@@ -1,18 +1,19 @@
 package com.service.impl;
 
 import com.entity.Student;
-import com.entity.User;
 import com.service.StudentService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
-public class StudentServiceImpl implements StudentService{
+@Service
+public class StudentServiceImpl implements StudentService {
 
     private static final Map<Integer, Student> DATABASES = new HashMap<>();
 
@@ -22,7 +23,7 @@ public class StudentServiceImpl implements StudentService{
         DATABASES.put(3, new Student(3, "u3", "p3"));
     }
 
-    @Cacheable(value = "user", key = "#id")
+    @Cacheable(value = "student", key = "#id")
     @Override
     public Student get(Integer id) {
         // TODO 我们就假设它是从数据库读取出来的
@@ -30,7 +31,7 @@ public class StudentServiceImpl implements StudentService{
         return DATABASES.get(id);
     }
 
-    @CachePut(value = "user", key = "#user.id")
+    @CachePut(value = "student", key = "#student.id")
     @Override
     public Student saveOrUpdate(Student student) {
         DATABASES.put(student.getId(), student);
@@ -38,7 +39,7 @@ public class StudentServiceImpl implements StudentService{
         return student;
     }
 
-    @CacheEvict(value = "user", key = "#id")
+    @CacheEvict(value = "student", key = "#id")
     @Override
     public void delete(Integer id) {
         DATABASES.remove(id);
