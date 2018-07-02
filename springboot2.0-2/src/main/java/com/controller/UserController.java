@@ -2,12 +2,14 @@ package com.controller;
 
 import com.battcn.swagger.properties.ApiDataType;
 import com.entity.User;
+import com.service.StudentService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -17,6 +19,9 @@ public class UserController {
 
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
+    @Autowired
+    private StudentService service;
+
     @GetMapping
     @ApiOperation(value = "条件查询")
     @ApiImplicitParams({
@@ -24,6 +29,7 @@ public class UserController {
             @ApiImplicitParam(name = "password", value = "密码", dataType = ApiDataType.STRING),
     })
     public User query(String username, String password) {
+        service.get();
         return new User(username, password);
     }
 
@@ -31,6 +37,7 @@ public class UserController {
     @ApiOperation(value = "根据ID获取用户")
     @ApiImplicitParam(name = "id", value = "主键", dataType = ApiDataType.INT)
     public User getUserById(@PathVariable("id") Integer id) {
+        service.get();
         User user = new User();
         user.setId(id);
         return user;

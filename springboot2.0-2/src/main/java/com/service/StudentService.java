@@ -25,4 +25,6 @@ public interface StudentService  {
      * @param id key值
      */
     void delete(Integer id);
+
+    String get();
 }

@@ -45,4 +45,11 @@ public class StudentServiceImpl implements StudentService {
         DATABASES.remove(id);
         log.info("进入 delete 方法");
     }
+
+    @Cacheable(value = "User")
+    @Override
+    public String get(){
+        System.out.println("进入方法");
+        return "test name";
+    }
 }
