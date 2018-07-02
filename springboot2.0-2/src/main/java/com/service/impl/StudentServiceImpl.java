@@ -26,7 +26,7 @@ public class StudentServiceImpl implements StudentService {
     @Cacheable(value = "student", key = "#id")
     @Override
     public Student get(Integer id) {
-        // TODO 我们就假设它是从数据库读取出来的
+        // 我们就假设它是从数据库读取出来的
         log.info("进入 get 方法");
         return DATABASES.get(id);
     }
