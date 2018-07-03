@@ -4,17 +4,17 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.springboot2.0</groupId>
-	<artifactId>jxls</artifactId>
+	<artifactId>redis</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>jxls</name>
-	<description>jxls生成模板类</description>
+	<name>rabbitmq</name>
+	<description>基于springboot2.0+mybatis+mysql+rabbitmq</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.0.3.RELEASE</version>
+		<version>2.0.2.RELEASE</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 
@@ -26,52 +26,138 @@
 
 	<dependencies>
 		<dependency>
+			<groupId>org.mybatis.spring.boot</groupId>
+			<artifactId>mybatis-spring-boot-starter</artifactId>
+			<version>1.3.2</version>
+		</dependency>
+
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
-		</dependency>
-
-		<!-- https://mvnrepository.com/artifact/org.jxls/jxls -->
-		<dependency>
-			<groupId>org.jxls</groupId>
-			<artifactId>jxls</artifactId>
-			<version>2.4.0</version>
-		</dependency>
-
-
-		<dependency>
-			<groupId>org.jxls</groupId>
-			<artifactId>jxls-poi</artifactId>
-			<version>1.0.15</version>
+			<version>RELEASE</version>
 		</dependency>
 
 		<dependency>
-			<groupId>org.apache.poi</groupId>
-			<artifactId>poi</artifactId>
-			<version>3.9</version>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<scope>runtime</scope>
 		</dependency>
-
 		<dependency>
-			<groupId>org.apache.poi</groupId>
-			<artifactId>poi-ooxml</artifactId>
-			<version>3.9</version>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional>
 		</dependency>
-
-
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-	</dependencies>
+
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>druid-spring-boot-starter</artifactId>
+			<version>1.1.10</version>
+		</dependency>
+
+		<!-- 通用Mapper插件
+		文档地址：https://gitee.com/free/Mapper/wikis/Home -->
+		<dependency>
+			<groupId>tk.mybatis</groupId>
+			<artifactId>mapper-spring-boot-starter</artifactId>
+			<version>2.0.2</version>
+		</dependency>
+		<!-- 分页插件
+         文档地址：https://github.com/pagehelper/Mybatis-PageHelper/blob/master/wikis/zh/HowToUse.md -->
+		<dependency>
+			<groupId>com.github.pagehelper</groupId>
+			<artifactId>pagehelper-spring-boot-starter</artifactId>
+			<version>1.2.5</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-redis</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-pool2</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.battcn</groupId>
+			<artifactId>swagger-spring-boot-starter</artifactId>
+			<version>1.4.5-RELEASE</version>
+		</dependency>
+
+		<!--swagger生成文档归档 -->
+		<dependency>
+			<groupId>io.github.swagger2markup</groupId>
+			<artifactId>swagger2markup</artifactId>
+			<version>1.3.1</version>
+		</dependency>
+
+    </dependencies>
+
+	<repositories>
+		<repository>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+			<id>jcenter-releases</id>
+			<name>jcenter</name>
+			<url>http://jcenter.bintray.com</url>
+		</repository>
+	</repositories>
 
 	<build>
+		<resources>
+			<resource><directory>src/main/resources</directory></resource>
+			<resource>
+				<directory>src/main/java</directory>
+				<includes>
+					<include>**/*.xml</include>
+				</includes>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+
+			<!-- 插件生成swagger2文档 -->
+			<plugin>
+				<groupId>io.github.swagger2markup</groupId>
+				<artifactId>swagger2markup-maven-plugin</artifactId>
+				<version>1.3.1</version>
+				<configuration>
+					<swaggerInput>http://localhost:8080/v2/api-docs</swaggerInput>
+					<outputDir>src/docs/asciidoc/generated</outputDir>
+					<config>
+						<swagger2markup.markupLanguage>ASCIIDOC</swagger2markup.markupLanguage>
+					</config>
+				</configuration>
+			</plugin>
+
+			<!-- 生成swagger2 HTML文档 -->
+			<plugin>
+				<groupId>org.asciidoctor</groupId>
+				<artifactId>asciidoctor-maven-plugin</artifactId>
+				<version>1.5.3</version>
+				<configuration>
+					<sourceDirectory>src/docs/asciidoc/generated</sourceDirectory>
+					<outputDirectory>src/docs/asciidoc/html</outputDirectory>
+					<backend>html</backend>
+					<sourceHighlighter>coderay</sourceHighlighter>
+					<attributes>
+						<toc>left</toc>
+					</attributes>
+				</configuration>
+			</plugin>
+
 		</plugins>
 	</build>
-
 
 </project>
