@@ -1,0 +1,46 @@
+## 1.Content-Type = application/json
+```
+public class User{
+...
+ private Date birthDate
+}
+```
+```$xslt
+使用@JsonFormat进行格式化
+@JsonFormat(pattern = "yyyy-MM-dd")
+private Date birthDate
+```
+
+## 2.form-data
+### 2.1 使用注解
+```$xslt
+@DateTimeFormat(pattern = "yyyy-MM-dd")
+private Date birthDate
+```
+
+### 2.2 @InitBinder  
+
+``
+@InitBinder
+public void initDate(WebDataBinder dataBinder){
+    dataBinder.addCustomFormatter(new DateFormatter("yyyy-MM-dd"),"birthDate");
+ }
+``
+### 2.3 通过自定义注解+实现接口的方式
+```$xslt
+实现HandlerMethodArgumentResolver接口
+```
+
+## 3.服务间调用会进行序列化
+```$xslt
+@JsonSerialize(using = xxx.class)
+private Date birthDate
+
+public class CustomDoubleSerialize extends JsonSerializer<Double> {
+    @Override
+    public void serialize(Double value, JsonGenerator gen, SerializerProvider serializers) throws IOException, JsonProcessingException {
+        gen.writeString(new DecimalFormat("#0.00").format(value));
+    }
+}
+```
+
